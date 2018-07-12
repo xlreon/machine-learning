@@ -33,3 +33,32 @@ def sim_distance(prefs,person1,person2):
 
         return 1/(1+sum_of_squares)
 
+# Returns pearsons correlation
+def pearson_correlation(prefs,person1,person2):
+    si={}
+    for item in prefs[person1]:
+        if item in prefs[person2]:
+            si[item]=1
+    if len(si)==0: return 0
+
+    # Added up all the preferences
+    sum1=sum([prefs[person1][it] for it in si])
+    sum2=sum([prefs[person2][it] for it in si])
+
+    # Sum of the squares
+    sumSq1=sum(pow(prefs[person1][it],2) for it in si)
+    sumSq2=sum(pow(prefs[person2][it],2) for it in si)
+
+    # Sum of the products
+    pSum=sum(prefs[person1][it]*prefs[person2][it] for it in si)
+
+    # Calculating Pearson Score
+    num=pSum-(sum1*sum2/len(si))
+    den=sqrt((sumSq1-pow(sum1,2)/len(si))*(sumSq2-pow(sum2,2)/len(si)))
+    if den==0: return 0
+    r=num/den
+    return r    
+
+
+
+
