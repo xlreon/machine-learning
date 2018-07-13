@@ -57,7 +57,19 @@ def pearson_correlation(prefs,person1,person2):
     den=sqrt((sumSq1-pow(sum1,2)/len(si))*(sumSq2-pow(sum2,2)/len(si)))
     if den==0: return 0
     r=num/den
-    return r    
+    return r
+
+# Returns the best matches for person from the data set
+def top_matches(prefs,person,n=5,similarity=pearson_correlation):
+    scores=[(similarity(prefs,person,other),other) for other in prefs if other!=person]
+
+    # Sorting the list to get the highest scores first
+    scores.sort()
+    scores.reverse()
+    return scores[0:n]
+
+
+
 
 
 
