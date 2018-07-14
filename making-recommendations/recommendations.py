@@ -107,3 +107,20 @@ def transformPrefs(prefs):
             # Flip item and person
             result[item][person] = prefs[person][item]
     return result    
+
+
+def loadMovieLens(path='../datasets/movielens'):
+
+    # Get movie titles
+    movies={}
+    for line in open(path+"/u.item", encoding = "ISO-8859-1"):
+        (id,title)=line.split('|')[0:2]
+        movies[id]=title
+
+    # Load data
+    prefs={}
+    for line in open(path+"/u.data", encoding = "ISO-8859-1"):
+        (user,movieid,rating,ts)=line.split('\t')
+        prefs.setdefault(user,{})
+        prefs[user][movies[movieid]]=float(rating)
+    return prefs        
