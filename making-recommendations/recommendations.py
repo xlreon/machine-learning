@@ -95,10 +95,15 @@ def getRecommendations(prefs, person, similarity=pearson_correlation):
     # returning the sorted list
     rankings.sort()
     rankings.reverse()
-    return rankings    
+    return rankings
 
+# Function to transform the critics data set to movie person
+def transformPrefs(prefs):
+    result={}
+    for person in prefs:
+        for item in prefs[person]:
+            result.setdefault(item,{})
 
-
-
-
-
+            # Flip item and person
+            result[item][person] = prefs[person][item]
+    return result    
