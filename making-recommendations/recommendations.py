@@ -68,6 +68,34 @@ def top_matches(prefs,person,n=5,similarity=pearson_correlation):
     scores.reverse()
     return scores[0:n]
 
+# Get recommendations for a person by using a weight average of every other user's rankings
+
+def getRecommendations(prefs, person, similarity=pearson_correlation):
+    totals={}
+    simSums={}
+    for other in prefs:
+
+        if other == person: continue
+        sim=similarity(prefs,person,other)
+
+        if sim<=0: continue
+
+        # check only the movies that I have not watched
+        for item in prefs[other]:
+            if item not in prefs[person] or prefs[person][item]==0:
+                # Similarity * score
+                totals.setdefault(item,0)
+                totals[item] += prefs[other][item]*sim
+
+                # SUm of similarities
+                simSums.setdefault(item,0)
+                simSums[item]+=sim
+    rankings = [(total/simSums[item],item) for item,total in totals.items()]
+
+    # returning the sorted list
+    rankings.sort()
+    rankings.reverse()
+    return rankings    
 
 
 
