@@ -56,7 +56,7 @@ def hcluster(row,distance=pearson):
     currentclustid=-1
 
     # Clusters are initially just the rows
-    clust=[bicluster(row[i],id=i) for i in range(len(rows))]
+    clust=[bicluster(row[i],id=i) for i in range(len(row))]
 
     while len(clust)>1:
         lowestpair = (0,1)
@@ -75,7 +75,7 @@ def hcluster(row,distance=pearson):
                     lowestpair=(i,j)
 
         # calculating the average of the 2 clusters
-        mergevec = [(clust[lowestpair[0]].vec[i]+clust[lowestpair[1].vec[i]])/2.0 for i in range (len(clust[0].vec))]
+        mergevec = [(clust[lowestpair[0]].vec[i]+clust[lowestpair[1]].vec[i])/2.0 for i in range (len(clust[0].vec))]
 
         # creating a new cluster
         newcluster=bicluster(mergevec,left=clust[lowestpair[0]],right=clust[lowestpair[1]],distance=closest,id=currentclustid)                    
@@ -86,3 +86,17 @@ def hcluster(row,distance=pearson):
         del clust[lowestpair[0]]
         clust.append(newcluster)
     return clust[0]    
+
+def printclust(clust,labels=None,n=0):
+    # indent to make a hierarchy layout
+    for i in range(n): print (' '),
+    if clust.id<0:
+        # negative id means that this is a branch
+        print ('-')
+    else:
+        # positive id means that this is an endpoint
+        if labels == None: print (clust.id)
+        else: print (labels[clust.id])
+    # now print the right and left branches
+    if clust.left!=None: printclust(clust.left,labels=labels,n=n+1)
+    if clust.right!=None: printclust(clust.right,labels=labels,n=n+1)            
